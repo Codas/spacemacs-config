@@ -24,6 +24,12 @@
     ido-ubiquitous
     ))
 
+(defun codas/init-windmove () "")
+(defun codas/init-slim-mode () "")
+(defun codas/init-qml-mode () "")
+(defun codas/init-exec-path-from-shell () "")
+(defun codas/init-flyspell () "")
+(defun codas/init-outline-magic () "")
 
 (defun codas/init-ido-ubiquitous ()
   ""
