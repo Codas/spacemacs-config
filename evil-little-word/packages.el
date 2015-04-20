@@ -26,7 +26,7 @@ which require an initialization must be listed explicitly in the list.")
   "Initialize my package"
   (use-package evil
     :defer t
-    :init
+    :config
     (progn
       ;; Author: INA Lintaro <tarao.gnn at gmail.com>
       ;; URL: http://github.com/tarao/evil-plugins
@@ -147,7 +147,3 @@ list of categories."
 
       ))
   )
-;;
-;; Often the body of an initialize function uses `use-package'
-;; For more info on `use-package', see readme:
-;; https://github.com/jwiegley/use-package

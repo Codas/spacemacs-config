@@ -25,25 +25,19 @@ which require an initialization must be listed explicitly in the list.")
 (defun quickrun/init-quickrun ()
   "Initialize my package"
   (use-package quickrun
+    :defer t
     :init
     (progn
       (defun quickrun-maybe-region ()
-        ""
+        "Run region or buffer, depending on current evil state."
         (interactive)
         (cond
-          ((eq evil-state 'visual)
-           (quickrun-region (region-beginning) (region-end)))
-          (t
-           (quickrun))
+          ((eq evil-state 'visual) (quickrun-region (region-beginning) (region-end)))
+          (t (quickrun))
           ))
       (push '("*quickrun*") popwin:special-display-config)
       (evil-define-key 'normal quickrun/mode-map
         "q" 'delete-window)
-      ;; Add C++ command for C11 and set it default in C++ file.
-      ;; (quickrun-add-command "haskell/cabal"
-      ;;                       '((:command . "cabal")
-      ;;                         (:exec    . ("exec -- runghc %c %o %s %a")))
-      ;;                       :default "haskell")
       (evil-leader/set-key
         "cqq" 'quickrun-maybe-region
         "cqr" 'quickrun-replace-region

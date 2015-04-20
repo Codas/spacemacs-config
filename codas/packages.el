@@ -33,8 +33,9 @@
 
 (defun codas/init-ido-ubiquitous ()
   ""
+  (require 'ido-ubiquitous)
   (use-package ido-ubiquitous
-    :init
+    :config
     (progn
       (ido-ubiquitous-mode +1)
       )
@@ -45,7 +46,7 @@
   ""
   (require 'framemove)
   (use-package framemove
-    :init
+    :config
     (progn
       (when (fboundp 'windmove-default-keybindings)
         (windmove-default-keybindings))

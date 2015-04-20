@@ -14,7 +14,6 @@
    ;; of a list then all discovered layers will be installed.
    dotspacemacs-configuration-layers '(;; languages
                                        (haskell :variables
-                                                haskell-enable-ghci-ng-support t
                                                 haskell-enable-hindent-style "chris-done"
                                                 haskell-enable-shm-support t)
                                        ruby
@@ -42,6 +41,7 @@
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '(flycheck-haskell
                                     company-ghc
+                                    ghc
                                     helm-projectile)
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
    ;; are declared in a layer which is not a member of
@@ -164,10 +164,6 @@
   (add-to-load-path "~/.emacs.d/private/company-ide-backend/")
   (add-to-load-path "~/.emacs.d/private/flycheck-ide-backend/")
 
-  (defun flycheck-haskell-setup ()
-    "Blank function..."
-    )
-
   (autoload 'haskell-indentation-enable-show-indentations "haskell-indentation")
   (autoload 'haskell-indentation-disable-show-indentations "haskell-indentation")
   )
@@ -176,12 +172,12 @@
   "This is were you can ultimately override default Spacemacs configuration.
 This function is called at the very end of Spacemacs initialization."
   ;; use same OS X key configurations
-  (setq mac-command-modifier 'meta mac-option-modifier
-        nil)
+  (setq mac-command-modifier 'meta mac-option-modifier nil)
   (setq evil-want-fine-undo nil)
   ;; Sane cursor and window movements
-  (setq scroll-preserve-screen-position 1 smooth-scroll-margin
-        3 scroll-margin 4)
+  (setq scroll-preserve-screen-position 1
+        smooth-scroll-margin 3
+        scroll-margin 4)
 
   (use-package company
     :defer t
@@ -199,14 +195,13 @@ This function is called at the very end of Spacemacs initialization."
   ;;     (add-to-list 'helm-completing-read-handlers-alist '(TeX-command-master . ido))
   ;;     ))
 
-  ;; use solarized-dark
-  (disable-theme 'solarized-light)
   ;; get these buffers out of the way!
-  (push '("*GHC Info*" :noselect t)
-        popwin:special-display-config)
-  (push '("*Warnings*" :noselect t)
-        popwin:special-display-config)
-  (setq-default flycheck-disabled-checkers '(haskell-ghc javascript-jshint))
+  (push '("*GHC Info*" :noselect t) popwin:special-display-config)
+  (push '("*Warnings*" :noselect t) popwin:special-display-config)
+
+  (when (configuration-layer/layer-usedp 'syntax-checking)
+    (setq-default flycheck-disabled-checkers '(haskell-ghc javascript-jshint)))
+
   ;; haskell config
   (use-package haskell-mode
     :defer t
@@ -224,12 +219,10 @@ This function is called at the very end of Spacemacs initialization."
       (add-hook 'haskell-mode-hook 'ide-backend-mode)
       (spacemacs|add-company-hook haskell-mode)
       (push '(company-ide-backend) company-backends-haskell-mode)
-      (use-package flycheck
-        :defer t
-        :config
-        (progn
-          (require 'flycheck-ide-backend)
-          (flycheck-ide-backend-setup)))
+      (when (configuration-layer/layer-usedp 'syntax-checking)
+        (require 'flycheck-ide-backend)
+        (flycheck-ide-backend-setup)
+        )
       ))
   ;; latex
   (use-package tex
