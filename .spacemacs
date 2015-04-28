@@ -179,6 +179,9 @@ This function is called at the very end of Spacemacs initialization."
         smooth-scroll-margin 3
         scroll-margin 4)
 
+  ;; not needed (just visual select the line) and interferes with shm-mode
+  (global-hl-line-mode -1)
+
   (use-package company
     :defer t
     :init
@@ -207,6 +210,10 @@ This function is called at the very end of Spacemacs initialization."
     :defer t
     :init
     (progn
+      (evil-define-key 'normal haskell-mode-map
+         ")" 'shm/close-paren)
+      (evil-define-key 'insert haskell-mode-map
+         (kbd "RET") 'shm/newline-indent)
       (evil-leader/set-key-for-mode 'haskell-mode
         "mht" 'ide-backend-mode-type
         "mt" 'ide-backend-mode-type ;; mht is really not that nice to type.
@@ -281,7 +288,7 @@ This function is called at the very end of Spacemacs initialization."
   (custom-set-variables
    '(haskell-process-type 'cabal-repl)
    '(haskell-process-args-cabal-repl
-     '("--ghc-option=-ferror-spans" "--with-ghc=ghci-ng"))
+     '("--ghc-option=-ferror-spans"))
    '(haskell-notify-p t)
    '(haskell-process-suggest-remove-import-lines t)
    '(haskell-process-auto-import-loaded-modules t)
@@ -290,7 +297,7 @@ This function is called at the very end of Spacemacs initialization."
    '(haskell-process-path-ghci "ghci-ng")
    '(haskell-process-args-ghci '("-ferror-spans"))
    '(haskell-process-args-cabal-repl
-     '("--ghc-option=-ferror-spans" "--with-ghc=ghci-ng"))
+     '("--ghc-option=-ferror-spans"))
    '(haskell-process-generate-tags nil)
    '(haskell-process-log t)
    '(haskell-interactive-mode-eval-pretty nil)
@@ -334,7 +341,7 @@ This function is called at the very end of Spacemacs initialization."
  '(haskell-interactive-mode-eval-pretty nil)
  '(haskell-interactive-popup-error nil t)
  '(haskell-notify-p t)
- '(haskell-process-args-cabal-repl (quote ("--ghc-option=-ferror-spans" "--with-ghc=ghci-ng")))
+ '(haskell-process-args-cabal-repl (quote ("--ghc-option=-ferror-spans")))
  '(haskell-process-args-ghci (quote ("-ferror-spans")))
  '(haskell-process-auto-import-loaded-modules t)
  '(haskell-process-generate-tags nil)
@@ -350,6 +357,10 @@ This function is called at the very end of Spacemacs initialization."
  '(js2-include-node-externs t)
  '(magit-use-overlays nil)
  '(ring-bell-function (quote ignore) t)
+ '(safe-local-variable-values
+   (quote
+    ((haskell-process-use-ghci . t)
+     (haskell-indent-spaces . 4))))
  '(scala-indent:align-forms t)
  '(scala-indent:align-parameters t)
  '(scala-indent:default-run-on-strategy scala-indent:operator-strategy)
@@ -360,4 +371,5 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
+ '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))
