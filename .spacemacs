@@ -182,6 +182,12 @@ This function is called at the very end of Spacemacs initialization."
   ;; not needed (just visual select the line) and interferes with shm-mode
   (global-hl-line-mode -1)
 
+  (setq-default js2-basic-offset 2
+                css-indent-offset 2
+                web-mode-css-indent-offset 2
+                web-mode-markup-indent-offset 2
+                web-mode-code-indent-offset 2)
+
   (use-package company
     :defer t
     :init

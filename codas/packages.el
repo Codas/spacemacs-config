@@ -22,8 +22,11 @@
     flyspell
     outline-magic
     ido-ubiquitous
+    shakespeare-mode
     ))
 
+
+(defun codas/init-shakespeare-mode () "")
 (defun codas/init-windmove () "")
 (defun codas/init-slim-mode () "")
 (defun codas/init-qml-mode () "")
