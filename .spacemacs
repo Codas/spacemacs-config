@@ -22,7 +22,9 @@
                                        javascript
                                        scala
                                        auctex
+                                       emacs-lisp
                                        ;; utility
+                                       shell
                                        org
                                        org-repo-todo
                                        restclient
@@ -34,10 +36,16 @@
                                        evil-little-word
                                        quickrun
                                        ;; spacemacs layer
-                                       auto-completion
-                                      ;; better-defaults
+                                       (auto-completion :variables
+                                                        auto-completion-enable-sort-by-usage t)
+                                       ;; better-defaults
                                        syntax-checking
                                        )
+   ;; List of additional packages that will be installed wihout being
+   ;; wrapped in a layer. If you need some configuration for these
+   ;; packages then consider to create a layer, you can also put the
+   ;; configuration in `dotspacemacs/config'.
+   dotspacemacs-additional-packages '()
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '(flycheck-haskell
                                     company-ghc
@@ -101,6 +109,12 @@
    ;; By default the command key is `:' so ex-commands are executed like in Vim
    ;; with `:' and Emacs commands are executed with `<leader> :'.
    dotspacemacs-command-key ":"
+   ;; If non nil then `ido' replaces `helm' for some commands. For now only
+   ;; `find-files' (SPC f f) is replaced.
+   dotspacemacs-use-ido t
+   ;; If non nil the paste micro-state is enabled. When enabled pressing `p`
+   ;; several times cycle between the kill ring content.
+   dotspacemacs-enable-paste-micro-state nil
    ;; Guide-key delay in seconds. The Guide-key is the popup buffer listing
    ;; the commands bound to the current keystrokes.
    dotspacemacs-guide-key-delay 0.5
@@ -134,8 +148,14 @@
    dotspacemacs-smooth-scrolling t
    ;; If non-nil smartparens-strict-mode will be enabled in programming modes.
    dotspacemacs-smartparens-strict-mode nil
+   ;; Select a scope to highlight delimiters. Possible value is `all',
+   ;; `current' or `nil'. Default is `all'
+   dotspacemacs-highlight-delimiters 'all
    ;; If non nil advises quit functions to keep server open when quitting.
    dotspacemacs-persistent-server nil
+   ;; List of search tool executable names. Spacemacs uses the first installed
+   ;; tool of the list. Supported tools are `ag', `pt', `ack' and `grep'.
+   dotspacemacs-search-tools '("ag" "ack" "grep")
    ;; The default package repository used if no explicit repository has been
    ;; specified with an installed package.
    ;; Not used for now.
@@ -164,8 +184,12 @@
   (add-to-load-path "~/.emacs.d/private/company-ide-backend/")
   (add-to-load-path "~/.emacs.d/private/flycheck-ide-backend/")
 
-  (autoload 'haskell-indentation-enable-show-indentations "haskell-indentation")
-  (autoload 'haskell-indentation-disable-show-indentations "haskell-indentation")
+  ;; (autoload 'haskell-indentation-enable-show-indentations "haskell-indentation")
+  ;; (autoload 'haskell-indentation-disable-show-indentations "haskell-indentation")
+
+  ;; don't use fish in emacs shells
+  (setq explicit-shell-file-name "/bin/zsh")
+  (setq shell-file-name "/bin/zsh")
   )
 
 (defun dotspacemacs/config ()
@@ -216,10 +240,8 @@ This function is called at the very end of Spacemacs initialization."
     :defer t
     :init
     (progn
-      (evil-define-key 'normal haskell-mode-map
-         ")" 'shm/close-paren)
-      (evil-define-key 'insert haskell-mode-map
-         (kbd "RET") 'shm/newline-indent)
+      (evil-define-key 'normal haskell-mode-map ")" 'shm/close-paren)
+      (evil-define-key 'insert haskell-mode-map (kbd "RET") 'shm/newline-indent)
       (evil-leader/set-key-for-mode 'haskell-mode
         "mht" 'ide-backend-mode-type
         "mt" 'ide-backend-mode-type ;; mht is really not that nice to type.
@@ -241,9 +263,8 @@ This function is called at the very end of Spacemacs initialization."
   (use-package tex
     :defer t
     :config (progn
-              (require 'reftex)
               (add-hook 'LaTeX-mode-hook 'custom-latex-mode-hook)
-              (add-hook 'reftex-toc-mode-hook 'custom-reftex-mode-hook)):config
+              (add-hook 'reftex-toc-mode-hook 'custom-reftex-mode-hook))
               (progn
                 (require 'texmathp)
                 (evil-define-key 'visual
@@ -273,8 +294,6 @@ This function is called at the very end of Spacemacs initialization."
                 (setq-default TeX-master nil TeX-PDF-mode
                               t)
                 (evil-set-initial-state 'reftex-toc-mode 'normal))))
-
-(defun custom-reftex-mode-hook ())
 
 (defun custom-latex-mode-hook ()
   (latex-math-mode)
