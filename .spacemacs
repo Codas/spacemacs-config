@@ -264,41 +264,28 @@ This function is called at the very end of Spacemacs initialization."
     :defer t
     :config (progn
               (add-hook 'LaTeX-mode-hook 'custom-latex-mode-hook)
-              (add-hook 'reftex-toc-mode-hook 'custom-reftex-mode-hook))
               (progn
                 (require 'texmathp)
-                (evil-define-key 'visual
-                  LaTeX-mode-map
-                  (kbd "gw")
-                  'LaTeX-fill-region)
-                (push '("latexmk" "latexmk -pdf %s" TeX-run-TeX nil
-                        t :help "Run latexmk on file")
+                (evil-define-key
+                  'visual LaTeX-mode-map (kbd "gw") 'LaTeX-fill-region)
+                (push '("latexmk" "latexmk -pdf %s" TeX-run-TeX nil t :help "Run latexmk on file")
                       TeX-command-list)
                 (setq TeX-auto-save t
-                      TeX-parse-self
-                      t
-                      reftex-toc-split-windows-horizontally
-                      t
-                      reftex-toc-split-windows-fraction
-                      0.35
-                      font-latex-fontify-script
-                      nil
-                      font-latex-fontify-sectioning
-                      'color
-                      reftex-plug-into-AUCTeX
-                      t
+                      TeX-parse-self t
+                      reftex-toc-split-windows-horizontally t
+                      reftex-toc-split-windows-fraction 0.35
+                      font-latex-fontify-script nil
+                      font-latex-fontify-sectioning 'color
                       TeX-view-program-selection
                       '((output-pdf "PDF Viewer"))
                       TeX-view-program-list
                       '(("PDF Viewer" "/Applications/Skim.app/Contents/SharedSupport/displayline -b -g %n %o %b")))
-                (setq-default TeX-master nil TeX-PDF-mode
-                              t)
+                (setq-default TeX-master nil TeX-PDF-mode t)
                 (evil-set-initial-state 'reftex-toc-mode 'normal))))
 
 (defun custom-latex-mode-hook ()
   (latex-math-mode)
   (turn-on-smartparens-mode)
-  (turn-on-reftex)
   (setq TeX-command-default "latexmk")
   (outline-minor-mode)
   (TeX-source-correlate-mode)
@@ -363,7 +350,6 @@ This function is called at the very end of Spacemacs initialization."
  '(expand-region-reset-fast-key "r")
  '(flycheck-disabled-checkers (quote (haskell-ghc javascript-jshint)))
  '(haskell-interactive-mode-eval-mode (quote haskell-mode))
- '(haskell-interactive-mode-eval-pretty nil)
  '(haskell-interactive-popup-error nil t)
  '(haskell-notify-p t)
  '(haskell-process-args-cabal-repl (quote ("--ghc-option=-ferror-spans")))
@@ -371,7 +357,6 @@ This function is called at the very end of Spacemacs initialization."
  '(haskell-process-auto-import-loaded-modules t)
  '(haskell-process-generate-tags nil)
  '(haskell-process-log t)
- '(haskell-process-path-ghci "ghci-ng")
  '(haskell-process-reload-with-fbytecode nil)
  '(haskell-process-suggest-remove-import-lines t)
  '(haskell-process-type (quote cabal-repl))
