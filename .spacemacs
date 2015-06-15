@@ -24,7 +24,8 @@
                                        auctex
                                        emacs-lisp
                                        ;; utility
-                                       shell
+                                       (shell :variables
+                                              shell-default-shell 'eshell)
                                        org
                                        org-repo-todo
                                        restclient
@@ -172,6 +173,7 @@
    ruby-version-manager 'rvm
    ;; Enable projectile-rails
    ruby-on-rails-support t
+   ns-use-native-fullscreen nil
    )
 
   ;; Use emacs 24.4 desktop save mode
@@ -235,6 +237,16 @@ This function is called at the very end of Spacemacs initialization."
   (when (configuration-layer/layer-usedp 'syntax-checking)
     (setq-default flycheck-disabled-checkers '(haskell-ghc javascript-jshint)))
 
+  (when (configuration-layer/layer-usedp 'auto-completion)
+    (use-package web-mode
+      :defer t
+      :init
+      (progn
+        (add-hook 'scss-mode 'smartparens-mode)
+        )
+      )
+    )
+
   ;; haskell config
   (use-package haskell-mode
     :defer t
@@ -281,7 +293,7 @@ This function is called at the very end of Spacemacs initialization."
                       TeX-view-program-list
                       '(("PDF Viewer" "/Applications/Skim.app/Contents/SharedSupport/displayline -b -g %n %o %b")))
                 (setq-default TeX-master nil TeX-PDF-mode t)
-                (evil-set-initial-state 'reftex-toc-mode 'normal))))
+                (evil-set-initial-state 'reftex-toc-mode 'normal)))))
 
 (defun custom-latex-mode-hook ()
   (latex-math-mode)
@@ -345,11 +357,26 @@ This function is called at the very end of Spacemacs initialization."
  '(ahs-idle-interval 0.25)
  '(ahs-idle-timer 0 t)
  '(ahs-inhibit-face-list nil)
+ '(ansi-color-faces-vector
+   [default bold shadow italic underline bold bold-italic bold])
+ '(ansi-color-names-vector
+   ["#073642" "#dc322f" "#859900" "#b58900" "#268bd2" "#d33682" "#2aa198" "#657b83"])
  '(company-tooltip-align-annotations t)
+ '(compilation-message-face (quote default))
+ '(cua-global-mark-cursor-color "#2aa198")
+ '(cua-normal-cursor-color "#839496")
+ '(cua-overwrite-cursor-color "#b58900")
+ '(cua-read-only-cursor-color "#859900")
+ '(custom-safe-themes
+   (quote
+    ("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" "1c57936ffb459ad3de4f2abbc39ef29bfb109eade28405fa72734df1bc252c13" default)))
+ '(electric-indent-mode nil)
  '(expand-region-contract-fast-key "V")
  '(expand-region-reset-fast-key "r")
+ '(fci-rule-color "#073642" t)
  '(flycheck-disabled-checkers (quote (haskell-ghc javascript-jshint)))
  '(haskell-interactive-mode-eval-mode (quote haskell-mode))
+ '(haskell-interactive-mode-eval-pretty nil)
  '(haskell-interactive-popup-error nil t)
  '(haskell-notify-p t)
  '(haskell-process-args-cabal-repl (quote ("--ghc-option=-ferror-spans")))
@@ -357,15 +384,42 @@ This function is called at the very end of Spacemacs initialization."
  '(haskell-process-auto-import-loaded-modules t)
  '(haskell-process-generate-tags nil)
  '(haskell-process-log t)
+ '(haskell-process-path-ghci "ghci-ng")
  '(haskell-process-reload-with-fbytecode nil)
  '(haskell-process-suggest-remove-import-lines t)
  '(haskell-process-type (quote cabal-repl))
  '(haskell-process-use-presentation-mode t)
  '(haskell-stylish-on-save nil)
  '(haskell-tags-on-save t)
- '(js2-basic-offset 2)
+ '(highlight-changes-colors (quote ("#d33682" "#6c71c4")))
+ '(highlight-symbol-colors
+   (--map
+    (solarized-color-blend it "#002b36" 0.25)
+    (quote
+     ("#b58900" "#2aa198" "#dc322f" "#6c71c4" "#859900" "#cb4b16" "#268bd2"))))
+ '(highlight-symbol-foreground-color "#93a1a1")
+ '(highlight-tail-colors
+   (quote
+    (("#073642" . 0)
+     ("#546E00" . 20)
+     ("#00736F" . 30)
+     ("#00629D" . 50)
+     ("#7B6000" . 60)
+     ("#8B2C02" . 70)
+     ("#93115C" . 85)
+     ("#073642" . 100))))
+ '(hl-bg-colors
+   (quote
+    ("#7B6000" "#8B2C02" "#990A1B" "#93115C" "#3F4D91" "#00629D" "#00736F" "#546E00")))
+ '(hl-fg-colors
+   (quote
+    ("#002b36" "#002b36" "#002b36" "#002b36" "#002b36" "#002b36" "#002b36" "#002b36")))
+ '(js2-basic-offset 2 t)
  '(js2-include-node-externs t)
+ '(magit-diff-use-overlays nil)
  '(magit-use-overlays nil)
+ '(pos-tip-background-color "#073642")
+ '(pos-tip-foreground-color "#93a1a1")
  '(ring-bell-function (quote ignore) t)
  '(safe-local-variable-values
    (quote
@@ -375,7 +429,35 @@ This function is called at the very end of Spacemacs initialization."
  '(scala-indent:align-parameters t)
  '(scala-indent:default-run-on-strategy scala-indent:operator-strategy)
  '(shm-auto-insert-skeletons t)
- '(shm-use-presentation-mode t))
+ '(shm-use-presentation-mode t)
+ '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#073642" 0.2))
+ '(term-default-bg-color "#002b36")
+ '(term-default-fg-color "#839496")
+ '(vc-annotate-background nil)
+ '(vc-annotate-color-map
+   (quote
+    ((20 . "#dc322f")
+     (40 . "#c85d17")
+     (60 . "#be730b")
+     (80 . "#b58900")
+     (100 . "#a58e00")
+     (120 . "#9d9100")
+     (140 . "#959300")
+     (160 . "#8d9600")
+     (180 . "#859900")
+     (200 . "#669b32")
+     (220 . "#579d4c")
+     (240 . "#489e65")
+     (260 . "#399f7e")
+     (280 . "#2aa198")
+     (300 . "#2898af")
+     (320 . "#2793ba")
+     (340 . "#268fc6")
+     (360 . "#268bd2"))))
+ '(vc-annotate-very-old-color nil)
+ '(weechat-color-list
+   (quote
+    (unspecified "#002b36" "#073642" "#990A1B" "#dc322f" "#546E00" "#859900" "#7B6000" "#b58900" "#00629D" "#268bd2" "#93115C" "#d33682" "#00736F" "#2aa198" "#839496" "#657b83"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

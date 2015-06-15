@@ -26,7 +26,14 @@
     ))
 
 
-(defun codas/init-shakespeare-mode () "")
+(defun codas/init-shakespeare-mode ()
+  (use-package shakespeare-hamlet-mode
+    :defer t
+    :init
+    (add-hook 'shakespeare-hamlet-mode-hook 'disable-electric-indent-mode)
+    )
+  )
+
 (defun codas/init-windmove () "")
 (defun codas/init-slim-mode () "")
 (defun codas/init-qml-mode () "")
