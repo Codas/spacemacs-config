@@ -30,7 +30,13 @@
   (use-package shakespeare-hamlet-mode
     :defer t
     :init
-    (add-hook 'shakespeare-hamlet-mode-hook 'disable-electric-indent-mode)
+    (progn
+      (defun codas-shakespare-mode-hook ()
+        (disable-electric-indent-mode)
+        (smartparens-mode)
+        )
+      (add-hook 'shakespeare-hamlet-mode-hook 'codas-shakespare-mode-hook)
+      )
     )
   )
 

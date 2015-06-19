@@ -174,6 +174,9 @@
    ;; Enable projectile-rails
    ruby-on-rails-support t
    ns-use-native-fullscreen nil
+
+   golden-ratio-auto-scale t
+   golden-ratio-adjust-factor 0.7
    )
 
   ;; Use emacs 24.4 desktop save mode
@@ -182,9 +185,9 @@
   ;; Make cabal bin directory visible to emacs (used by haskell-mode etc.)
   (add-to-list 'exec-path "~/.cabal/bin/")
 
-  (add-to-load-path "~/.emacs.d/private/ide-backend-mode/")
-  (add-to-load-path "~/.emacs.d/private/company-ide-backend/")
-  (add-to-load-path "~/.emacs.d/private/flycheck-ide-backend/")
+  ;; (add-to-load-path "~/.emacs.d/private/ide-backend-mode/")
+  ;; (add-to-load-path "~/.emacs.d/private/company-ide-backend/")
+  ;; (add-to-load-path "~/.emacs.d/private/flycheck-ide-backend/")
 
   ;; (autoload 'haskell-indentation-enable-show-indentations "haskell-indentation")
   ;; (autoload 'haskell-indentation-disable-show-indentations "haskell-indentation")
@@ -207,12 +210,22 @@ This function is called at the very end of Spacemacs initialization."
 
   ;; not needed (just visual select the line) and interferes with shm-mode
   (global-hl-line-mode -1)
+  (golden-ratio-mode t)
 
   (setq-default js2-basic-offset 2
                 css-indent-offset 2
                 web-mode-css-indent-offset 2
                 web-mode-markup-indent-offset 2
                 web-mode-code-indent-offset 2)
+
+  (use-package golden-ratio
+    :defer t
+    :config
+    (progn
+      (eval-after-load 'golden-ratio
+        '(add-to-list 'golden-ratio-exclude-buffer-names
+                      "*eshell-1*"))
+      ))
 
   (use-package company
     :defer t
@@ -238,11 +251,11 @@ This function is called at the very end of Spacemacs initialization."
     (setq-default flycheck-disabled-checkers '(haskell-ghc javascript-jshint)))
 
   (when (configuration-layer/layer-usedp 'auto-completion)
-    (use-package web-mode
+    (use-package scss-mode
       :defer t
       :init
       (progn
-        (add-hook 'scss-mode 'smartparens-mode)
+        (add-hook 'scss-mode 'turn-on-smartparens-mode)
         )
       )
     )
@@ -254,22 +267,22 @@ This function is called at the very end of Spacemacs initialization."
     (progn
       (evil-define-key 'normal haskell-mode-map ")" 'shm/close-paren)
       (evil-define-key 'insert haskell-mode-map (kbd "RET") 'shm/newline-indent)
-      (evil-leader/set-key-for-mode 'haskell-mode
-        "mht" 'ide-backend-mode-type
-        "mt" 'ide-backend-mode-type ;; mht is really not that nice to type.
-        "ml" 'ide-backend-mode-load))
-    :config
-    (progn
-      (add-hook 'haskell-mode-hook 'custom-haskell-mode-hook)
-      (require 'ide-backend-mode)
-      (require 'company-ide-backend)
-      (add-hook 'haskell-mode-hook 'ide-backend-mode)
-      (spacemacs|add-company-hook haskell-mode)
-      (push '(company-ide-backend) company-backends-haskell-mode)
-      (when (configuration-layer/layer-usedp 'syntax-checking)
-        (require 'flycheck-ide-backend)
-        (flycheck-ide-backend-setup)
-        )
+      ;; (evil-leader/set-key-for-mode 'haskell-mode
+        ;; "mht" 'ide-backend-mode-type
+        ;; "mt" 'ide-backend-mode-type ;; mht is really not that nice to type.
+        ;; "ml" 'ide-backend-mode-load))
+    ;; :config
+    ;; (progn
+    ;;   (add-hook 'haskell-mode-hook 'custom-haskell-mode-hook)
+    ;;   (require 'ide-backend-mode)
+    ;;   (require 'company-ide-backend)
+    ;;   (add-hook 'haskell-mode-hook 'ide-backend-mode)
+    ;;   (spacemacs|add-company-hook haskell-mode)
+    ;;   (push '(company-ide-backend) company-backends-haskell-mode)
+    ;;   (when (configuration-layer/layer-usedp 'syntax-checking)
+    ;;     (require 'flycheck-ide-backend)
+    ;;     (flycheck-ide-backend-setup)
+    ;;     )
       ))
   ;; latex
   (use-package tex
@@ -308,7 +321,7 @@ This function is called at the very end of Spacemacs initialization."
 
 (defun custom-haskell-mode-hook ()
   "Execute as haskell-mode-hook."
-  (subword-mode +1)
+  ;; (subword-mode +1)
   (custom-set-variables
    '(haskell-process-type 'cabal-repl)
    '(haskell-process-args-cabal-repl
@@ -369,7 +382,7 @@ This function is called at the very end of Spacemacs initialization."
  '(cua-read-only-cursor-color "#859900")
  '(custom-safe-themes
    (quote
-    ("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" "1c57936ffb459ad3de4f2abbc39ef29bfb109eade28405fa72734df1bc252c13" default)))
+    ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" "1c57936ffb459ad3de4f2abbc39ef29bfb109eade28405fa72734df1bc252c13" default)))
  '(electric-indent-mode nil)
  '(expand-region-contract-fast-key "V")
  '(expand-region-reset-fast-key "r")
